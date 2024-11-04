@@ -62,4 +62,10 @@ jobs:
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
-        
+      
+  build-aws-infra-notifications:
+    runs-on: ubuntu-latest
+    needs: build-aws-infra
+    steps:
+    - name: Slack notification
+      run: echo "This is for notification"
