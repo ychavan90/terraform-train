@@ -6,6 +6,10 @@ on:
 
 jobs:
   build-aws-infra:
+    permissions:
+      contents: read # for actions/checkout to fetch code
+      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+      
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -19,6 +23,19 @@ jobs:
 
       - name: GitLeaks Scan
         uses: gitleaks/gitleaks-action@v2
+
+      - name: Checkov GitHub Action
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          # This will add both a CLI output to the console and create a results.sarif file
+          output_format: cli,sarif
+          output_file_path: console,results.sarif
+          
+      - name: Upload SARIF file
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: results.sarif
         
       - name: Checkout Terraform version
         run: terraform version
