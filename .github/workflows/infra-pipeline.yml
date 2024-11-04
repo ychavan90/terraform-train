@@ -14,7 +14,12 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: GitLeaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        
       - name: Checkout Terraform version
         run: terraform version
 
