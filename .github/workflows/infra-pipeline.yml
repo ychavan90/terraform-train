@@ -5,6 +5,26 @@ on:
     branches: [ "main" ]
 
 jobs:
+
+  sast_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          pip install semgrep gitleaks bandit checkov trivy
+
+      - name: Run SAST Scans
+        run: ./sast_scan.sh
+        
+  dast_scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run DAST Scans
+        run: ./dast_scan.sh
+        
   build-aws-infra:
     permissions:
       contents: read # for actions/checkout to fetch code
